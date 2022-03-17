@@ -10,12 +10,6 @@ open class JPAGenericRepository<E: Entity, R: JPARecord<E>>(
     private val crudRepository: CrudRepository<R, Int>,
     private val recordMapper: EntityRecordMapper<E, R>,
 ) : GenericRepository<E> {
-    override fun create(e: E): Int {
-        val record = recordMapper.fromEntity(e)
-        crudRepository.save(record)
-        return record.id!!
-    }
-
     override fun getAll(): List<E> {
         return crudRepository.findAll().map { it.toEntity() }
     }

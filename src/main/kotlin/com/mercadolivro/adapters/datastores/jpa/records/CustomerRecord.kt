@@ -22,6 +22,6 @@ data class CustomerRecord  (
     }
 
     override fun toEntity(): Customer {
-        return Customer(id = id, name = name!!, email = email!!)
+        return Customer(id = id ?: -1, name = name ?: "Could not be loaded", email = email ?: "Could not be loaded")
     }
 }

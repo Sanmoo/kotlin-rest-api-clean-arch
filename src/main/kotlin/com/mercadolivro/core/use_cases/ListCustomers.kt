@@ -14,7 +14,7 @@ class ListCustomers(private val customerRepository: CustomerRepository) {
         }
 
         return Output(all.map {
-            CreateCustomer.Output(id = it.id ?: throw RuntimeException("Unexpected situation"), name = it.name, email = it.email)
+            CreateCustomer.Output(id = it.id, name = it.name, email = it.email)
         })
     }
 }

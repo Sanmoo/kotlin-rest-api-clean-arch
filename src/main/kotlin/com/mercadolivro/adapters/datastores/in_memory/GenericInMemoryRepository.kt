@@ -5,14 +5,7 @@ import com.mercadolivro.core.use_cases.ports.GenericRepository
 
 open class GenericInMemoryRepository<T : Entity> : GenericRepository<T> {
     protected val store = HashMap<Int, T>()
-    private var index = 1
-
-    override fun create(e: T): Int {
-        val newId = index++
-        e.id = newId
-        store[newId] = e
-        return newId
-    }
+    protected var index = 1
 
     override fun getAll(): List<T> {
         return store.values.toList()

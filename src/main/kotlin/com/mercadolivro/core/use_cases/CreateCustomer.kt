@@ -1,15 +1,13 @@
 package com.mercadolivro.core.use_cases
 
-import com.mercadolivro.core.entities.Customer
-import com.mercadolivro.core.use_cases.ports.GenericRepository
+import com.mercadolivro.core.use_cases.ports.CustomerRepository
 
-class CreateCustomer(private val customerRepository: GenericRepository<Customer>) {
+class CreateCustomer(private val customerRepository: CustomerRepository) {
     data class Input(val name: String, val email: String)
     data class Output(val id: Int, val name: String, val email: String)
 
     fun createCustomer(i: Input): Output {
-        val customer = Customer(name = i.name, email = i.email)
-        val id = customerRepository.create(customer)
-        return Output(id, i.name, i.email)
+        val customer = customerRepository.create(i)
+        return Output(customer.id, customer.name, customer.email)
     }
 }
