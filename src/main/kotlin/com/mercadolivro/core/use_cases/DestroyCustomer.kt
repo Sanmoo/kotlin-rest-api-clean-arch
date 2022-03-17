@@ -21,7 +21,7 @@ class DestroyCustomer(
 
         val books = bookRepository
             .findByCustomer(customer, PaginationData(1000, 0))
-            .map { it.copy(status = BookStatus.DELETED, customer = null) }
+            .content.map { it.copy(status = BookStatus.DELETED, customer = null) }
         bookRepository.updateAll(books)
         customerRepository.update(customer.id, customer.copy(status = CustomerStatus.INACTIVE))
     }

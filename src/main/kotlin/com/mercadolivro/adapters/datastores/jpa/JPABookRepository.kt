@@ -5,10 +5,12 @@ import com.mercadolivro.adapters.datastores.jpa.records.BookRecordRepository
 import com.mercadolivro.adapters.datastores.jpa.records.CustomerRecord
 import com.mercadolivro.adapters.datastores.jpa.records.CustomerRecordRepository
 import com.mercadolivro.adapters.datastores.jpa.utils.toPageable
+import com.mercadolivro.adapters.datastores.jpa.utils.toPaginatedResult
 import com.mercadolivro.core.entities.Book
 import com.mercadolivro.core.entities.BookStatus
 import com.mercadolivro.core.entities.Customer
 import com.mercadolivro.core.use_cases.ports.BookRepository
+import com.mercadolivro.core.use_cases.ports.PaginatedResult
 import com.mercadolivro.core.use_cases.ports.PaginationData
 import java.math.BigDecimal
 
@@ -29,26 +31,33 @@ class JPABookRepository(
         ).toEntity()
     }
 
-    override fun getAllByName(name: String, paginationData: PaginationData): List<Book> {
-        return bookRecordRepository.findAllByName(name, paginationData.toPageable())
-            .map { it.toEntity() }
+    override fun getAllByName(name: String, paginationData: PaginationData): PaginatedResult<Book> {
+        val findAllByName = bookRecordRepository.findAllByName(name, paginationData.toPageable())
+        return findAllByName.toPaginatedResult().copyToAnotherType(findAllByName.content.map { it.toEntity() })
     }
 
-    override fun getAllByStatus(status: BookStatus, paginationData: PaginationData): List<Book> {
-        return bookRecordRepository.findAllByStatus(status, paginationData.toPageable())
-            .map { it.toEntity() }
+    override fun getAllByStatus(status: BookStatus, paginationData: PaginationData): PaginatedResult<Book> {
+        val findAllByStatus = bookRecordRepository.findAllByStatus(status, paginationData.toPageable())
+        return findAllByStatus.toPaginatedResult().copyToAnotherType(findAllByStatus.content.map { it.toEntity() })
     }
 
-    override fun getAllByNameAndStatus(name: String, status: BookStatus, paginationData: PaginationData): List<Book> {
-        return bookRecordRepository.findAllByNameAndStatus(name, status, paginationData.toPageable())
-            .map { it.toEntity() }
+    override fun getAllByNameAndStatus(
+        name: String,
+        status: BookStatus,
+        paginationData: PaginationData
+    ): PaginatedResult<Book> {
+        val findAllByNameAndStatus =
+            bookRecordRepository.findAllByNameAndStatus(name, status, paginationData.toPageable())
+        return findAllByNameAndStatus.toPaginatedResult()
+            .copyToAnotherType(findAllByNameAndStatus.content.map { it.toEntity() })
     }
 
-    override fun findByCustomer(customer: Customer, paginationData: PaginationData): List<Book> {
-        return bookRecordRepository.findByCustomer(
+    override fun findByCustomer(customer: Customer, paginationData: PaginationData): PaginatedResult<Book> {
+        val findByCustomer = bookRecordRepository.findByCustomer(
             CustomerRecord.fromEntity(customer),
             paginationData.toPageable()
-        ).map { it.toEntity() }
+        )
+        return findByCustomer.toPaginatedResult().copyToAnotherType(findByCustomer.content.map { it.toEntity() })
     }
 
     override fun updateAll(books: List<Book>) {

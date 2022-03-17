@@ -4,18 +4,20 @@ import com.mercadolivro.controller.dto.BookDTO
 import com.mercadolivro.controller.dto.PaginatedResponse
 import com.mercadolivro.controller.dto.PartialBookDTO
 import com.mercadolivro.controller.utils.toPaginationData
+import com.mercadolivro.controller.utils.toPaginatedResponse
 import com.mercadolivro.core.entities.BookStatus
 import com.mercadolivro.core.use_cases.*
+import com.mercadolivro.core.use_cases.ports.PaginatedResult
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
-fun ListBooks.Output.listToEntities(): List<BookDTO> {
-    return list.map {
+fun ListBooks.Output.toDTOs(): PaginatedResult<BookDTO> {
+    return result.copyToAnotherType(result.content.map {
         BookDTO(id = it.id, name = it.name, price = it.price, status = it.status, customerId = it.customerId)
-    }
+    })
 }
 
 @RestController
@@ -58,15 +60,15 @@ class BookController(
         @PageableDefault(page = 0, size = 10) pageable: Pageable
     ): PaginatedResponse<BookDTO> {
         val paginationData = pageable.toPaginationData()
-        return listBooks.list(ListBooks.Input(name = name, paginationData = paginationData)).listToEntities()
-            .let { PaginatedResponse(it, paginationData) }
+        return listBooks.list(ListBooks.Input(name = name, paginationData = paginationData)).toDTOs()
+            .toPaginatedResponse()
     }
 
     @GetMapping("active")
     fun listAllActive(@PageableDefault(page = 0, size = 10) pageable: Pageable): PaginatedResponse<BookDTO> {
         val paginationData = pageable.toPaginationData()
         return listBooks.list(ListBooks.Input(status = BookStatus.ACTIVE, paginationData = paginationData))
-            .listToEntities().let { PaginatedResponse(it, paginationData) }
+            .toDTOs().toPaginatedResponse()
     }
 
     @PatchMapping("{id}")

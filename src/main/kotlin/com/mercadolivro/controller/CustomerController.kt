@@ -2,6 +2,7 @@ package com.mercadolivro.controller
 
 import com.mercadolivro.controller.dto.CustomerDTO
 import com.mercadolivro.controller.dto.PaginatedResponse
+import com.mercadolivro.controller.utils.toPaginatedResponse
 import com.mercadolivro.controller.utils.toPaginationData
 import com.mercadolivro.core.use_cases.*
 import org.springframework.data.domain.Pageable
@@ -20,11 +21,15 @@ class CustomerController(
     private val destroyCustomer: DestroyCustomer,
 ) {
     @GetMapping
-    fun list(@RequestParam name: String?, @PageableDefault(page = 0, size = 10) pageable: Pageable): PaginatedResponse<CustomerDTO> {
+    fun list(
+        @RequestParam name: String?,
+        @PageableDefault(page = 0, size = 10) pageable: Pageable
+    ): PaginatedResponse<CustomerDTO> {
         val paginationData = pageable.toPaginationData()
-        return listCustomers.list(ListCustomers.Input(name, paginationData = paginationData)).list.map {
+        val list = listCustomers.list(ListCustomers.Input(name, paginationData = paginationData)).list
+        return list.copyToAnotherType(list.content.map {
             CustomerDTO(id = it.id, name = it.name, email = it.email, status = it.status)
-        }.let { PaginatedResponse(it, paginationData) }
+        }).toPaginatedResponse()
     }
 
     @GetMapping("{id}")

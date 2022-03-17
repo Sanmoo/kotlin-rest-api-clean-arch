@@ -1,11 +1,12 @@
 package com.mercadolivro.core.use_cases
 
 import com.mercadolivro.core.use_cases.ports.CustomerRepository
+import com.mercadolivro.core.use_cases.ports.PaginatedResult
 import com.mercadolivro.core.use_cases.ports.PaginationData
 
 class ListCustomers(private val customerRepository: CustomerRepository) {
     data class Input(val name: String?, val paginationData: PaginationData)
-    data class Output(val list: List<CreateCustomer.Output>)
+    data class Output(val list: PaginatedResult<CreateCustomer.Output>)
 
     fun list(i: Input): Output {
         val all = if (i.name == null) {
@@ -14,8 +15,8 @@ class ListCustomers(private val customerRepository: CustomerRepository) {
             customerRepository.getAllByName(i.name, paginationData = i.paginationData)
         }
 
-        return Output(all.map {
+        return Output(all.copyToAnotherType(all.content.map {
             CreateCustomer.Output(id = it.id, name = it.name, email = it.email, status = it.status)
-        })
+        }))
     }
 }
