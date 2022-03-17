@@ -6,6 +6,6 @@ data class Book(
     override val id: Int,
     val name: String,
     val price: BigDecimal,
-    val status: BookStatus,
     val customer: Customer?,
+    val status: BookStatus
 ) : Entity

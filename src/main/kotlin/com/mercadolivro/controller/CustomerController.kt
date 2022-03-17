@@ -18,20 +18,20 @@ class CustomerController(
     @GetMapping
     fun list(@RequestParam name: String?): List<CustomerDTO> {
         return listCustomers.list(ListCustomers.Input(name)).list.map {
-            CustomerDTO(id = it.id, name = it.name, email = it.email)
+            CustomerDTO(id = it.id, name = it.name, email = it.email, status = it.status)
         }
     }
 
     @GetMapping("{id}")
     fun get(@PathVariable id: Int): CustomerDTO? {
         val detail = getCustomerDetails.detail(GetCustomerDetails.Input(id))
-        return detail?.let { CustomerDTO(id = detail.id, email = detail.email, name = detail.name) }
+        return detail?.let { CustomerDTO(id = detail.id, email = detail.email, name = detail.name, status = detail.status) }
     }
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun update(@PathVariable id: Int, @Valid @RequestBody c: CustomerDTO) {
-        updateCustomer.update(UpdateCustomer.Input(id = id, name = c.name, email = c.email))
+        updateCustomer.update(UpdateCustomer.Input(id = id, name = c.name, email = c.email, status = c.status))
     }
 
     @DeleteMapping("{id}")
@@ -44,9 +44,8 @@ class CustomerController(
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@Valid @RequestBody c: CustomerDTO): CustomerDTO
     {
-        val output = createCustomer.createCustomer(
+        createCustomer.createCustomer(
             CreateCustomer.Input(name = c.name, email = c.email)
-        )
-        return c.copy(id = output.id)
+        ).let { c.copy(id = it.id) }
     }
 }

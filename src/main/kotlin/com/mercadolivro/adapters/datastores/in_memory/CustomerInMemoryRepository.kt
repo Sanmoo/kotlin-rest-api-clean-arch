@@ -1,13 +1,14 @@
 package com.mercadolivro.adapters.datastores.in_memory
 
 import com.mercadolivro.core.entities.Customer
+import com.mercadolivro.core.entities.CustomerStatus
 import com.mercadolivro.core.use_cases.CreateCustomer
 import com.mercadolivro.core.use_cases.ports.CustomerRepository
 
 class CustomerInMemoryRepository : GenericInMemoryRepository<Customer>(), CustomerRepository {
     override fun create(input: CreateCustomer.Input): Customer {
         val newIndex = index++
-        val newRecord = Customer(id = newIndex, name = input.name, email = input.email)
+        val newRecord = Customer(id = newIndex, name = input.name, email = input.email, status = CustomerStatus.ACTIVE)
         store[newIndex] = newRecord
         return newRecord
     }

@@ -1,5 +1,6 @@
 package com.mercadolivro.controller.dto
 
+import com.mercadolivro.core.entities.CustomerStatus
 import javax.validation.constraints.NotBlank
 
 data class CustomerDTO(
@@ -10,4 +11,6 @@ data class CustomerDTO(
 
     @field:NotBlank
     val email: String,
+
+    val status: CustomerStatus?
 )
