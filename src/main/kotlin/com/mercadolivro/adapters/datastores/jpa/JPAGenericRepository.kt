@@ -2,20 +2,22 @@ package com.mercadolivro.adapters.datastores.jpa
 
 import com.mercadolivro.adapters.datastores.jpa.records.EntityRecordMapper
 import com.mercadolivro.adapters.datastores.jpa.records.JPARecord
+import com.mercadolivro.adapters.datastores.jpa.utils.toPageable
 import com.mercadolivro.core.entities.Entity
 import com.mercadolivro.core.use_cases.ports.GenericRepository
-import org.springframework.data.repository.CrudRepository
+import com.mercadolivro.core.use_cases.ports.PaginationData
+import org.springframework.data.jpa.repository.JpaRepository
 
-open class JPAGenericRepository<E: Entity, R: JPARecord<E>>(
-    private val crudRepository: CrudRepository<R, Int>,
+open class JPAGenericRepository<E : Entity, R : JPARecord<E>>(
+    private val crudRepository: JpaRepository<R, Int>,
     private val recordMapper: EntityRecordMapper<E, R>,
 ) : GenericRepository<E> {
-    override fun getAll(): List<E> {
-        return crudRepository.findAll().map { it.toEntity() }
+    override fun getAll(paginationData: PaginationData): List<E> {
+        return crudRepository.findAll(paginationData.toPageable()).map { it.toEntity() }.toList()
     }
 
     override fun getById(id: Int): E? {
-        return crudRepository.findById(id).map{ it.toEntity() }.orElse(null)
+        return crudRepository.findById(id).map { it.toEntity() }.orElse(null)
     }
 
     override fun update(id: Int, e: E) {

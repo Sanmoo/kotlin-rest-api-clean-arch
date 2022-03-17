@@ -1,7 +1,11 @@
 package com.mercadolivro.controller
 
 import com.mercadolivro.controller.dto.CustomerDTO
+import com.mercadolivro.controller.dto.PaginatedResponse
+import com.mercadolivro.controller.utils.toPaginationData
 import com.mercadolivro.core.use_cases.*
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -16,16 +20,24 @@ class CustomerController(
     private val destroyCustomer: DestroyCustomer,
 ) {
     @GetMapping
-    fun list(@RequestParam name: String?): List<CustomerDTO> {
-        return listCustomers.list(ListCustomers.Input(name)).list.map {
+    fun list(@RequestParam name: String?, @PageableDefault(page = 0, size = 10) pageable: Pageable): PaginatedResponse<CustomerDTO> {
+        val paginationData = pageable.toPaginationData()
+        return listCustomers.list(ListCustomers.Input(name, paginationData = paginationData)).list.map {
             CustomerDTO(id = it.id, name = it.name, email = it.email, status = it.status)
-        }
+        }.let { PaginatedResponse(it, paginationData) }
     }
 
     @GetMapping("{id}")
     fun get(@PathVariable id: Int): CustomerDTO? {
         val detail = getCustomerDetails.detail(GetCustomerDetails.Input(id))
-        return detail?.let { CustomerDTO(id = detail.id, email = detail.email, name = detail.name, status = detail.status) }
+        return detail?.let {
+            CustomerDTO(
+                id = detail.id,
+                email = detail.email,
+                name = detail.name,
+                status = detail.status
+            )
+        }
     }
 
     @PutMapping("{id}")
@@ -42,8 +54,7 @@ class CustomerController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@Valid @RequestBody c: CustomerDTO): CustomerDTO
-    {
+    fun create(@Valid @RequestBody c: CustomerDTO): CustomerDTO {
         return createCustomer.createCustomer(
             CreateCustomer.Input(name = c.name, email = c.email)
         ).let { c.copy(id = it.id) }

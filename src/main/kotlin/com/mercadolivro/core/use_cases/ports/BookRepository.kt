@@ -7,9 +7,9 @@ import java.math.BigDecimal
 
 interface BookRepository : GenericRepository<Book> {
     fun create(name: String, price: BigDecimal, status: BookStatus, customerId: Int?): Book
-    fun getAllByName(name: String): List<Book>
-    fun getAllByStatus(status: BookStatus): List<Book>
-    fun getAllByNameAndStatus(name: String, status: BookStatus): List<Book>
-    fun findByCustomer(customer: Customer): List<Book>
+    fun getAllByName(name: String, paginationData: PaginationData): List<Book>
+    fun getAllByStatus(status: BookStatus, paginationData: PaginationData): List<Book>
+    fun getAllByNameAndStatus(name: String, status: BookStatus, paginationData: PaginationData): List<Book>
+    fun findByCustomer(customer: Customer, paginationData: PaginationData): List<Book>
     fun updateAll(books: List<Book>)
 }

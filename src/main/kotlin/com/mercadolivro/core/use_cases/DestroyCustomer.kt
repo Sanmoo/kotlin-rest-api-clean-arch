@@ -5,6 +5,7 @@ import com.mercadolivro.core.entities.Customer
 import com.mercadolivro.core.entities.CustomerStatus
 import com.mercadolivro.core.use_cases.ports.BookRepository
 import com.mercadolivro.core.use_cases.ports.GenericRepository
+import com.mercadolivro.core.use_cases.ports.PaginationData
 
 class DestroyCustomer(
     private val customerRepository: GenericRepository<Customer>,
@@ -19,7 +20,7 @@ class DestroyCustomer(
         }
 
         val books = bookRepository
-            .findByCustomer(customer)
+            .findByCustomer(customer, PaginationData(1000, 0))
             .map { it.copy(status = BookStatus.DELETED, customer = null) }
         bookRepository.updateAll(books)
         customerRepository.update(customer.id, customer.copy(status = CustomerStatus.INACTIVE))
