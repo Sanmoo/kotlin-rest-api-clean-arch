@@ -7,5 +7,5 @@ data class Book(
     val name: String,
     val price: BigDecimal,
     val status: BookStatus,
-    val customer: Customer,
+    val customer: Customer?,
 ) : Entity

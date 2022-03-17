@@ -6,7 +6,7 @@ class ListCustomers(private val customerRepository: CustomerRepository) {
     data class Input(val name: String?)
     data class Output(val list: List<CreateCustomer.Output>)
 
-    fun listCustomers(i: Input): Output {
+    fun list(i: Input): Output {
         val all = if (i.name == null) {
             customerRepository.getAll()
         } else {

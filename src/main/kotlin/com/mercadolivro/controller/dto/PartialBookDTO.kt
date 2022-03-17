@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonAlias
 import com.mercadolivro.core.entities.BookStatus
 import java.math.BigDecimal
 
-data class BookDTO(
-    val id: Int?,
-    val name: String,
-    val price: BigDecimal,
+data class PartialBookDTO(
+    val name: String?,
+    val price: BigDecimal?,
     val status: BookStatus?,
 
     @JsonAlias("customer_id")

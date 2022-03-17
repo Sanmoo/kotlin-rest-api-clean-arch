@@ -14,4 +14,8 @@ val beans = beans {
     bean<UpdateCustomer>()
     bean<DestroyCustomer>()
     bean<CreateBook>()
+    bean<GetBookDetails>()
+    bean<ListBooks>()
+    bean<UpdateBook>()
+    bean<DestroyBook>()
 }

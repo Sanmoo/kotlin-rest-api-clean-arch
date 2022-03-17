@@ -17,7 +17,7 @@ class CustomerController(
 ) {
     @GetMapping
     fun list(@RequestParam name: String?): List<CustomerDTO> {
-        return listCustomers.listCustomers(ListCustomers.Input(name)).list.map {
+        return listCustomers.list(ListCustomers.Input(name)).list.map {
             CustomerDTO(id = it.id, name = it.name, email = it.email)
         }
     }

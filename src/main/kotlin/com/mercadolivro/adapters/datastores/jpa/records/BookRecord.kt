@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import javax.persistence.*
 
 @Entity(name = "books")
-data class BookRecord  (
+data class BookRecord(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     override var id: Int? = null,
@@ -26,7 +26,13 @@ data class BookRecord  (
 ) : JPARecord<Book> {
     companion object : EntityRecordMapper<Book, BookRecord> {
         override fun fromEntity(input: Book): BookRecord {
-            return BookRecord(id = input.id, name = input.name, price = input.price, status = input.status)
+            return BookRecord(
+                id = input.id,
+                name = input.name,
+                price = input.price,
+                status = input.status,
+                customer = input.customer?.let { CustomerRecord.fromEntity(it) }
+            )
         }
     }
 
@@ -35,7 +41,7 @@ data class BookRecord  (
             id = id!!,
             price = price!!,
             status = status!!,
-            customer = customer!!.toEntity(),
+            customer = customer?.toEntity(),
             name = name!!
         )
     }
