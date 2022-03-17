@@ -3,6 +3,7 @@ package com.mercadolivro.core.use_cases
 import com.mercadolivro.core.entities.BookStatus
 import com.mercadolivro.core.entities.Customer
 import com.mercadolivro.core.entities.CustomerStatus
+import com.mercadolivro.core.use_cases.exceptions.Errors
 import com.mercadolivro.core.use_cases.ports.BookRepository
 import com.mercadolivro.core.use_cases.ports.GenericRepository
 import com.mercadolivro.core.use_cases.ports.PaginationData
@@ -16,7 +17,7 @@ class DestroyCustomer(
     fun destroy(i: Input) {
         val customer = customerRepository.getById(i.id) ?: throw Exception("Customer not found")
         if (customer.status != CustomerStatus.ACTIVE) {
-            throw Exception("User is already not active")
+            throw Errors.ML202.toOperationNotAllowed()
         }
 
         val books = bookRepository

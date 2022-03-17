@@ -9,3 +9,5 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  jackson:
+    default-property-inclusion: non_null
