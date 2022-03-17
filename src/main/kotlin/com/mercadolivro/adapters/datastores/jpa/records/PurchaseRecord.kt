@@ -9,28 +9,28 @@ import javax.persistence.*
 data class PurchaseRecord(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    override var id: Int? = null,
+    override val id: Int = 0,
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    val customer: CustomerRecord? = null,
+    private var customer: CustomerRecord? = null,
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "purchase_book",
         joinColumns = [JoinColumn(name = "purchase_id")],
         inverseJoinColumns = [JoinColumn(name = "book_id")]
     )
-    val books: List<BookRecord>? = null,
+    private var books: List<BookRecord> = listOf(),
 
     @Column
-    val nfe: String? = null,
+    private var nfe: String? = null,
 
     @Column
-    val price: BigDecimal? = null,
+    private var price: BigDecimal? = null,
 
     @Column(name = "created_at")
-    val createdAt: LocalDateTime? = null
+    private var createdAt: LocalDateTime? = null
 ) : JPARecord<Purchase> {
     companion object : EntityRecordMapper<Purchase, PurchaseRecord> {
         override fun fromEntity(input: Purchase): PurchaseRecord {
@@ -47,8 +47,8 @@ data class PurchaseRecord(
 
     override fun toEntity(): Purchase {
         return Purchase(
-            id = id ?: -1,
-            bookIds = books?.map { it.id!! }?.toSet() ?: setOf(),
+            id = id,
+            bookIds = books.map { it.id }.toSet(),
             customerId = customer!!.id!!,
             price = price!!,
             createdAt = createdAt!!,

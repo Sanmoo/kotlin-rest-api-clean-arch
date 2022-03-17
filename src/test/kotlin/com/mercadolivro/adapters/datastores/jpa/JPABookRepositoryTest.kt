@@ -82,6 +82,14 @@ internal class JPABookRepositoryTest {
         assertEquals(setOf(marcosBook1), result.content.toSet())
     }
 
+//    @Test
+//    fun `loads expected properties from database`() {
+//        val result = sut.findByCustomer(marcos, paginationData)
+//        assertEquals(marcosBook1.customer?.id, result.content[0].customer?.id)
+//        assertEquals(marcosBook1.status, result.content[0].status)
+//        assertEquals(setOf(marcosBook1), result.content.toSet())
+//    }
+
     @Test
     fun `updates in batch`() {
         val updatedBooks = listOf(alexBook1.copy(status = BookStatus.CANCELLED), alexBook2.copy(status = BookStatus.CANCELLED))

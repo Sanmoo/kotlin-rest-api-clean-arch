@@ -50,7 +50,7 @@ tasks.withType<Test> {
 }
 
 tasks.test {
-	finalizedBy(tasks.jacocoTestReport)
+	finalizedBy(tasks.jacocoTestCoverageVerification)
 }
 
 tasks.jacocoTestReport {
@@ -63,22 +63,20 @@ tasks.jacocoTestReport {
 }
 
 tasks.jacocoTestCoverageVerification {
+	dependsOn(tasks.jacocoTestReport)
 	violationRules {
 		rule {
+			element = "PACKAGE"
+			excludes = listOf("com.mercadolivro.configuration")
+
 			limit {
-				minimum = "0.5".toBigDecimal()
+				minimum = 1.0.toBigDecimal()
+				counter = "INSTRUCTION"
 			}
-		}
-
-		rule {
-			isEnabled = false
-			element = "CLASS"
-			includes = listOf("org.gradle.*")
 
 			limit {
-				counter = "LINE"
-				value = "TOTALCOUNT"
-				maximum = "0.3".toBigDecimal()
+				minimum = 1.0.toBigDecimal()
+				counter = "BRANCH"
 			}
 		}
 	}

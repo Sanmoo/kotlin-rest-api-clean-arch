@@ -12,7 +12,6 @@ class JPAPurchaseRepository(
     private val purchaseRecordRepository: PurchaseRecordRepository
 ) : JPAGenericRepository<Purchase, PurchaseRecord>(purchaseRecordRepository, PurchaseRecord),
     PurchaseRepository {
-
     override fun create(input: PurchaseRepository.CreateInput): Purchase {
         val purchaseRecord = PurchaseRecord(
             books = input.bookIds.toList().map { BookRecord(id = it) },

@@ -9,20 +9,20 @@ import javax.persistence.*
 data class BookRecord(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    override var id: Int? = null,
+    override val id: Int = 0,
 
     @Column
-    var name: String? = null,
+    private var name: String? = null,
 
     @Column
-    var price: BigDecimal? = null,
+    private var price: BigDecimal = 0.toBigDecimal(),
 
     @Column
-    var status: BookStatus? = null,
+    private var status: BookStatus? = null,
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    var customer: CustomerRecord? = null,
+    private var customer: CustomerRecord? = null
 ) : JPARecord<Book> {
     companion object : EntityRecordMapper<Book, BookRecord> {
         override fun fromEntity(input: Book): BookRecord {
@@ -38,8 +38,8 @@ data class BookRecord(
 
     override fun toEntity(): Book {
         return Book(
-            id = id!!,
-            price = price!!,
+            id = id,
+            price = price,
             status = status!!,
             customer = customer?.toEntity(),
             name = name!!

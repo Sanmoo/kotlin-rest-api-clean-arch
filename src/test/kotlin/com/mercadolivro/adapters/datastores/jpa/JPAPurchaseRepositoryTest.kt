@@ -3,6 +3,7 @@ package com.mercadolivro.adapters.datastores.jpa
 import com.mercadolivro.adapters.datastores.jpa.records.*
 import com.mercadolivro.core.entities.Book
 import com.mercadolivro.core.entities.Customer
+import com.mercadolivro.core.entities.Purchase
 import com.mercadolivro.core.use_cases.ports.PurchaseRepository
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.AfterEach
@@ -18,6 +19,8 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("test")
 @ExtendWith(MockKExtension::class)
 internal class JPAPurchaseRepositoryTest {
+    private lateinit var purchase: Purchase
+    private lateinit var bookIds: Set<Int>
     private lateinit var testingBook2: Book
     private lateinit var testingBook1: Book
     private lateinit var testingCustomer: Customer
@@ -49,25 +52,31 @@ internal class JPAPurchaseRepositoryTest {
         testingCustomer = jpaCustomerRepository.saveCustomer()
         testingBook1 = jpaBookRepository.saveBook()
         testingBook2 = jpaBookRepository.saveBook()
-    }
 
-    @Test
-    fun `creates a purchase`() {
-        val bookIds = setOf(testingBook1.id, testingBook2.id)
-        val purchase = sut.create(PurchaseRepository.CreateInput(
+        bookIds = setOf(testingBook1.id, testingBook2.id)
+        purchase = sut.create(PurchaseRepository.CreateInput(
             customerId = testingCustomer.id,
             bookIds = bookIds,
             price = testingBook1.price + testingBook2.price
         ))
 
-        val purchaseRecord = purchaseRecordRepository.getById(purchase.id)
+    }
+
+    @Test
+    fun `creates a purchase and gets it by id`() {
+        val purchaseFromDatastore = sut.getById(purchase.id)
 
         assertEquals(bookIds, purchase.bookIds)
+        assertEquals(purchase, purchaseFromDatastore)
+        assertEquals(null, purchase.nfe)
         assertEquals(testingCustomer.id, purchase.customerId)
-        assertEquals(purchase.createdAt, purchaseRecord.createdAt)
-        assertEquals(purchase.price, purchaseRecord.price)
-        assertEquals(purchase.id, purchaseRecord.id)
-        assertEquals(purchase.nfe, purchaseRecord.nfe)
+    }
+
+    @Test
+    fun `updates a purchase nfe`() {
+        sut.update(purchase.id, purchase.copy(nfe = "1234"))
+        val purchaseFromDatastore = sut.getById(purchase.id)
+        assertEquals("1234", purchaseFromDatastore?.nfe)
     }
 
     @AfterEach
