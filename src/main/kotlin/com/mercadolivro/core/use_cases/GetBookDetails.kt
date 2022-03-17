@@ -14,10 +14,22 @@ class GetBookDetails(private val bookRepository: GenericRepository<Book>) {
         val price: BigDecimal,
         val status: BookStatus,
         val customerId: Int?
-    )
+    ) {
+        companion object {
+            fun fromBookEntity(book: Book): Output {
+                return Output(
+                    id = book.id,
+                    name = book.name,
+                    price = book.price,
+                    status = book.status,
+                    customerId = book.customer?.id
+                )
+            }
+        }
+    }
 
     fun detail(input: Input): Output {
         val c = bookRepository.getById(input.id) ?: throw ML101.toResourceNotFoundException(input.id)
-        return Output(id = c.id, name = c.name, price = c.price, status = c.status, customerId = c.customer?.id)
+        return Output.fromBookEntity(c)
     }
 }

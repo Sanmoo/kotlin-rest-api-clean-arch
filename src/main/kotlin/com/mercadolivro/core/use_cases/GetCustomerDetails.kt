@@ -7,10 +7,16 @@ import com.mercadolivro.core.use_cases.ports.GenericRepository
 
 class GetCustomerDetails(private val customerRepository: GenericRepository<Customer>) {
     data class Input(val id: Int)
-    data class Output(val id: Int, val email: String, val name: String, val status: CustomerStatus)
+    data class Output(val id: Int, val email: String, val name: String, val status: CustomerStatus) {
+        companion object {
+            fun fromCustomerEntity(c: Customer): Output {
+                return Output(id = c.id, name = c.name, email = c.email, status = c.status)
+            }
+        }
+    }
 
     fun detail(input: Input): Output {
         val c = customerRepository.getById(input.id) ?: throw ML201.toResourceNotFoundException(input.id)
-        return Output(id = c.id, name = c.name, email = c.email, status = c.status)
+        return Output.fromCustomerEntity(c)
     }
 }

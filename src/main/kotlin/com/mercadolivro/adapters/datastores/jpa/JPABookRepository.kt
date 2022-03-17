@@ -63,4 +63,8 @@ class JPABookRepository(
     override fun updateAll(books: List<Book>) {
         bookRecordRepository.saveAll(books.map { BookRecord.fromEntity(it) })
     }
+
+    override fun getAllByIds(bookIds: Collection<Int>): List<Book> {
+        return bookRecordRepository.findAllById(bookIds).toList().map { it.toEntity() }
+    }
 }

@@ -1,13 +1,17 @@
 package com.mercadolivro.configuration
 
+import com.mercadolivro.adapters.SpringEventsAsynchronousCoordinator
+import com.mercadolivro.adapters.SpringEventsGenericListener
 import com.mercadolivro.adapters.datastores.jpa.JPABookRepository
 import com.mercadolivro.adapters.datastores.jpa.JPACustomerRepository
+import com.mercadolivro.adapters.datastores.jpa.JPAPurchaseRepository
 import com.mercadolivro.core.use_cases.*
 import org.springframework.context.support.beans
 
 val beans = beans {
     bean<JPACustomerRepository>()
     bean<JPABookRepository>()
+    bean<JPAPurchaseRepository>()
     bean<CreateCustomer>()
     bean<ListCustomers>()
     bean<GetCustomerDetails>()
@@ -18,4 +22,7 @@ val beans = beans {
     bean<ListBooks>()
     bean<UpdateBook>()
     bean<DestroyBook>()
+    bean<Purchase>()
+    bean<SpringEventsAsynchronousCoordinator>()
+    bean<SpringEventsGenericListener>()
 }

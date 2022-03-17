@@ -1,6 +1,7 @@
 package com.mercadolivro.controller
 
 import com.mercadolivro.controller.dto.BookDTO
+import com.mercadolivro.controller.dto.PostBookRequest
 import com.mercadolivro.controller.dto.PaginatedResponse
 import com.mercadolivro.controller.dto.PartialBookDTO
 import com.mercadolivro.controller.utils.toPaginationData
@@ -31,7 +32,7 @@ class BookController(
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody book: BookDTO) =
+    fun create(@RequestBody @Valid book: PostBookRequest) =
         createBook.create(CreateBook.Input(name = book.name, price = book.price, customerId = book.customerId)).let {
             BookDTO(
                 id = it.id,
@@ -56,7 +57,7 @@ class BookController(
 
     @GetMapping
     fun listAll(
-        @RequestParam name: String?,
+        @RequestParam(required = false) name: String?,
         @PageableDefault(page = 0, size = 10) pageable: Pageable
     ): PaginatedResponse<BookDTO> {
         val paginationData = pageable.toPaginationData()

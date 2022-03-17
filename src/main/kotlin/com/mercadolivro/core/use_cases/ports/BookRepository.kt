@@ -12,4 +12,5 @@ interface BookRepository : GenericRepository<Book> {
     fun getAllByNameAndStatus(name: String, status: BookStatus, paginationData: PaginationData): PaginatedResult<Book>
     fun findByCustomer(customer: Customer, paginationData: PaginationData): PaginatedResult<Book>
     fun updateAll(books: List<Book>)
+    fun getAllByIds(bookIds: Collection<Int>): List<Book>
 }

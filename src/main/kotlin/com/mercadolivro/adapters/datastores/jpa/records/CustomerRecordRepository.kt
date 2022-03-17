@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface CustomerRecordRepository : JpaRepository <CustomerRecord, Int> {
     fun findAllByName(name: String, pageable: Pageable): Page<CustomerRecord>
+    fun existsByEmail(email: String): Boolean
 }

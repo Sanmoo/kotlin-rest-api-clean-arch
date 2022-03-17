@@ -1,5 +1,6 @@
 package com.mercadolivro.controller
 
+import com.mercadolivro.controller.dto.PostCustomerRequest
 import com.mercadolivro.controller.dto.CustomerDTO
 import com.mercadolivro.controller.dto.PaginatedResponse
 import com.mercadolivro.controller.utils.toPaginatedResponse
@@ -59,9 +60,9 @@ class CustomerController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@Valid @RequestBody c: CustomerDTO): CustomerDTO {
+    fun create(@RequestBody @Valid c: PostCustomerRequest): CustomerDTO {
         return createCustomer.createCustomer(
             CreateCustomer.Input(name = c.name, email = c.email)
-        ).let { c.copy(id = it.id) }
+        ).let { CustomerDTO(id = it.id, name = it.name, email = it.email, status = it.status) }
     }
 }
