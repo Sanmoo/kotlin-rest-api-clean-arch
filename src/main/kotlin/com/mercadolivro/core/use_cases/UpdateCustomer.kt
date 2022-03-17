@@ -9,6 +9,11 @@ class UpdateCustomer(private val customerRepository: GenericRepository<Customer>
 
     fun update(c: Input) {
         val customer = customerRepository.getById(c.id) ?: throw Exception("Customer with id ${c.id} does not exist")
+
+        if (customer.status == CustomerStatus.INACTIVE) {
+            throw Exception("It is not possible to update an INACTIVE customer")
+        }
+
         customerRepository.update(c.id, Customer(
             id = c.id,
             name = c.name ?: customer.name,

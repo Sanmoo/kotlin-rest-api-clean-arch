@@ -13,6 +13,11 @@ class UpdateBook(
     data class Input(val id: Int, val name: String?, val price: BigDecimal?, val status: BookStatus?, val customerId: Int?)
     fun update(input: Input) {
         val book = bookRepository.getById(input.id) ?: throw Exception("Book does not exist")
+
+        if (book.status == BookStatus.DELETED) {
+            throw Exception("Cannot update a book with status ${book.status}")
+        }
+
         val newCustomer = input.customerId?.let {
             customerRepository.getById(it) ?: throw Exception("New customer does not exist")
         } ?: book.customer

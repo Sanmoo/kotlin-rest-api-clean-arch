@@ -44,7 +44,7 @@ class CustomerController(
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@Valid @RequestBody c: CustomerDTO): CustomerDTO
     {
-        createCustomer.createCustomer(
+        return createCustomer.createCustomer(
             CreateCustomer.Input(name = c.name, email = c.email)
         ).let { c.copy(id = it.id) }
     }
