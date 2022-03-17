@@ -5,4 +5,6 @@ data class Customer(
     val name: String,
     val email: String,
     val status: CustomerStatus,
+    val password: String,
+    val roles: Set<Role>,
 ) : Entity

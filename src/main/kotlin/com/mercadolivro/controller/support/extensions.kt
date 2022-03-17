@@ -1,4 +1,4 @@
-package com.mercadolivro.controller.utils
+package com.mercadolivro.controller.support
 
 import com.mercadolivro.controller.dto.PaginatedResponse
 import com.mercadolivro.core.use_cases.ports.PaginatedResult

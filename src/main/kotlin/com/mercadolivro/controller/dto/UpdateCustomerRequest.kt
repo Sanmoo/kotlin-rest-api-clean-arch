@@ -4,7 +4,7 @@ import com.mercadolivro.core.entities.CustomerStatus
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 
-data class CustomerDTO(
+data class UpdateCustomerRequest(
     val id: Int?,
 
     @field:NotBlank(message = "Must not be empty")

@@ -5,6 +5,7 @@ enum class Errors(private val message: String) {
     ML101("Book %s does not exist"),
     ML102("Cannot update a book with status %s"),
     ML103("Books with ids %s do not exist"),
+    ML104("It is not possible to purchase a book that is deleted or already sold"),
     ML201("Customer %s does not exist"),
     ML202("User is already not active"),
     ML203("It is not possible to update an INACTIVE customer"),

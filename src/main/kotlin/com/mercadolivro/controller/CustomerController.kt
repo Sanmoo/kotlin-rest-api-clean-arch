@@ -1,10 +1,9 @@
 package com.mercadolivro.controller
 
-import com.mercadolivro.controller.dto.PostCustomerRequest
-import com.mercadolivro.controller.dto.CustomerDTO
-import com.mercadolivro.controller.dto.PaginatedResponse
-import com.mercadolivro.controller.utils.toPaginatedResponse
-import com.mercadolivro.controller.utils.toPaginationData
+import com.mercadolivro.controller.dto.*
+import com.mercadolivro.controller.support.UserCanOnlyAccessTheirOwnResource
+import com.mercadolivro.controller.support.toPaginatedResponse
+import com.mercadolivro.controller.support.toPaginationData
 import com.mercadolivro.core.use_cases.*
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
@@ -29,40 +28,41 @@ class CustomerController(
         val paginationData = pageable.toPaginationData()
         val list = listCustomers.list(ListCustomers.Input(name, paginationData = paginationData)).list
         return list.copyToAnotherType(list.content.map {
-            CustomerDTO(id = it.id, name = it.name, email = it.email, status = it.status)
+            CustomerDTO(id = it.id, name = it.name, email = it.email, status = it.status, password = null)
         }).toPaginatedResponse()
     }
 
     @GetMapping("{id}")
-    fun get(@PathVariable id: Int): CustomerDTO? {
-        val detail = getCustomerDetails.detail(GetCustomerDetails.Input(id))
-        return detail?.let {
-            CustomerDTO(
-                id = detail.id,
-                email = detail.email,
-                name = detail.name,
-                status = detail.status
-            )
-        }
+    @UserCanOnlyAccessTheirOwnResource
+    fun get(@PathVariable id: Int): GetCustomerResponse {
+        val detail = getCustomerDetails.detailById(id)
+        return GetCustomerResponse(
+            id = detail.id,
+            email = detail.email,
+            name = detail.name,
+            status = detail.status
+        )
     }
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun update(@PathVariable id: Int, @Valid @RequestBody c: CustomerDTO) {
-        updateCustomer.update(UpdateCustomer.Input(id = id, name = c.name, email = c.email, status = c.status))
+    @UserCanOnlyAccessTheirOwnResource
+    fun update(@PathVariable id: Int, @Valid @RequestBody c: UpdateCustomerRequest) {
+        updateCustomer.update(UpdateCustomer.Input(id = id, name = c.name, email = c.email, status = c.status, password = c.password))
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @UserCanOnlyAccessTheirOwnResource
     fun destroy(@PathVariable id: Int) {
         destroyCustomer.destroy(DestroyCustomer.Input(id))
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody @Valid c: PostCustomerRequest): CustomerDTO {
+    fun create(@RequestBody @Valid c: PostCustomerRequest): GetCustomerResponse {
         return createCustomer.createCustomer(
-            CreateCustomer.Input(name = c.name, email = c.email)
-        ).let { CustomerDTO(id = it.id, name = it.name, email = it.email, status = it.status) }
+            CreateCustomer.Input(name = c.name, email = c.email, password = c.password)
+        ).let { GetCustomerResponse(id = it.id, name = it.name, email = it.email, status = it.status) }
     }
 }

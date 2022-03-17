@@ -35,6 +35,10 @@ class Purchase(
             throw Errors.ML103.toResourceNotFoundException(input.bookIds.subtract(foundBookIds))
         }
 
+        if (books.any { it.status in listOf(BookStatus.SOLD, BookStatus.DELETED) }) {
+            throw Errors.ML104.toOperationNotAllowed()
+        }
+
         val customer = customerRepository.getById(input.customerId) ?: throw Errors.ML201.toResourceNotFoundException(input.customerId)
 
         val purchaseRepositoryCreateInput = PurchaseRepository.CreateInput(

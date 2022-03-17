@@ -2,6 +2,7 @@ package com.mercadolivro.adapters.datastores.jpa.records
 
 import com.mercadolivro.core.entities.Customer
 import com.mercadolivro.core.entities.CustomerStatus
+import com.mercadolivro.core.entities.Role
 import javax.persistence.*
 
 @Entity(name = "customers")
@@ -17,7 +18,16 @@ data class CustomerRecord  (
     var email: String? = null,
 
     @Column
-    var status: CustomerStatus? = null
+    var status: CustomerStatus? = null,
+
+    @Column
+    var password: String? = null,
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "customer_roles", joinColumns = [JoinColumn(name = "customer_id")])
+    @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
+    var roles: Set<Role> = setOf()
 ) : JPARecord<Customer> {
     companion object : EntityRecordMapper<Customer, CustomerRecord> {
         override fun fromEntity(input: Customer): CustomerRecord {
@@ -30,7 +40,9 @@ data class CustomerRecord  (
             id = id ?: -1,
             name = name ?: "Could not be loaded",
             email = email ?: "Could not be loaded",
-            status = status ?: throw Exception("Unexpected situation. Status should not be null in database")
+            status = status ?: throw Exception("Unexpected situation. Status should not be null in database"),
+            password = password ?: "Could not be loaded",
+            roles = roles
         )
     }
 }

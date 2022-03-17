@@ -4,8 +4,8 @@ import com.mercadolivro.controller.dto.BookDTO
 import com.mercadolivro.controller.dto.PostBookRequest
 import com.mercadolivro.controller.dto.PaginatedResponse
 import com.mercadolivro.controller.dto.PartialBookDTO
-import com.mercadolivro.controller.utils.toPaginationData
-import com.mercadolivro.controller.utils.toPaginatedResponse
+import com.mercadolivro.controller.support.toPaginationData
+import com.mercadolivro.controller.support.toPaginatedResponse
 import com.mercadolivro.core.entities.BookStatus
 import com.mercadolivro.core.use_cases.*
 import com.mercadolivro.core.use_cases.ports.PaginatedResult

@@ -1,16 +1,15 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/mercadolivro
-    username: postgres
-    password: postgres
-    hikari:
-      connection-timeout: 20000
-      maximum-pool-size: 5
-  jpa:
-    hibernate:
-      ddl-auto: update
+  profiles:
+    active: dev
   jackson:
     default-property-inclusion: non_null
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  datasource:
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 5
+jwt:
+  secret: 8d7cc7a2-2a21-4aa8-a109-e9ec34a42498
+  expiration: 999999
