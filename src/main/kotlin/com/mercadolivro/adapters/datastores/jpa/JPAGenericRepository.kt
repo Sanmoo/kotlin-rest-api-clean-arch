@@ -16,7 +16,7 @@ open class JPAGenericRepository<E : Entity, R : JPARecord<E>>(
 ) : GenericRepository<E> {
     override fun getAll(paginationData: PaginationData): PaginatedResult<E> {
         val findAll = crudRepository.findAll(paginationData.toPageable())
-        return findAll.toPaginatedResult().copyToAnotherType(findAll.content.map { it.toEntity() })
+        return findAll.toPaginatedResult().copyToAnotherType { it.toEntity() }
     }
 
     override fun getById(id: Int): E? {

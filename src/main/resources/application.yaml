@@ -13,3 +13,6 @@ spring:
 jwt:
   secret: 8d7cc7a2-2a21-4aa8-a109-e9ec34a42498
   expiration: 999999
+context:
+  initializer:
+    classes: com.mercadolivro.configuration.FunctionalBeansInitializer

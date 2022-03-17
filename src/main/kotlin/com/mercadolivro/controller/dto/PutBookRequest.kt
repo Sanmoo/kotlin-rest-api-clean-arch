@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAlias
 import com.mercadolivro.core.entities.BookStatus
 import java.math.BigDecimal
 
-data class PartialBookDTO(
+data class PutBookRequest(
     val name: String?,
     val price: BigDecimal?,
     val status: BookStatus?,

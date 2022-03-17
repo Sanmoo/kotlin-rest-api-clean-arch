@@ -3,7 +3,7 @@ package com.mercadolivro.controller
 import com.mercadolivro.controller.dto.BookDTO
 import com.mercadolivro.controller.dto.PostBookRequest
 import com.mercadolivro.controller.dto.PaginatedResponse
-import com.mercadolivro.controller.dto.PartialBookDTO
+import com.mercadolivro.controller.dto.PutBookRequest
 import com.mercadolivro.controller.support.toPaginationData
 import com.mercadolivro.controller.support.toPaginatedResponse
 import com.mercadolivro.core.entities.BookStatus
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 fun ListBooks.Output.toDTOs(): PaginatedResult<BookDTO> {
-    return result.copyToAnotherType(result.content.map {
+    return result.copyToAnotherType {
         BookDTO(id = it.id, name = it.name, price = it.price, status = it.status, customerId = it.customerId)
-    })
+    }
 }
 
 @RestController
@@ -45,7 +45,7 @@ class BookController(
 
     @GetMapping("{id}")
     fun get(@PathVariable id: Int): BookDTO {
-        val book = getBookDetails.detail(GetBookDetails.Input(id)) ?: throw Exception("Not found")
+        val book = getBookDetails.detail(GetBookDetails.Input(id))
         return BookDTO(
             id = id,
             price = book.price,
@@ -74,7 +74,7 @@ class BookController(
 
     @PatchMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun update(@PathVariable id: Int, @Valid @RequestBody bookDto: PartialBookDTO) {
+    fun update(@PathVariable id: Int, @Valid @RequestBody bookDto: PutBookRequest) {
         updateBook.update(
             UpdateBook.Input(
                 id = id,

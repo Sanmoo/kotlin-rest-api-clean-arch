@@ -45,7 +45,7 @@ class ControllerAdvice {
             message = ex.message,
             internalCode = Errors.ML001.formatErrorCode(),
             errors = ex.bindingResult.fieldErrors.map {
-                FieldErrorResponse(it.defaultMessage ?: "invalid", it.field)
+                FieldErrorResponse(it.defaultMessage!!, it.field)
             }
         )
 

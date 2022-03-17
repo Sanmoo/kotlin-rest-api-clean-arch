@@ -7,7 +7,7 @@ data class Purchase(
     override val id: Int,
     val customerId: Int,
     val bookIds: Set<Int>,
-    val nfe: String? = null,
+    val nfe: String?,
     val price: BigDecimal,
     val createdAt: LocalDateTime
 ) : Entity

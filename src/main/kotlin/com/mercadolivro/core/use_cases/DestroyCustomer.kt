@@ -15,7 +15,7 @@ class DestroyCustomer(
     data class Input(val id: Int)
 
     fun destroy(i: Input) {
-        val customer = customerRepository.getById(i.id) ?: throw Exception("Customer not found")
+        val customer = customerRepository.getById(i.id) ?: throw Errors.ML201.toResourceNotFoundException(i.id)
         if (customer.status != CustomerStatus.ACTIVE) {
             throw Errors.ML202.toOperationNotAllowed()
         }

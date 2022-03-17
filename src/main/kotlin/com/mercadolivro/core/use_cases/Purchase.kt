@@ -1,6 +1,9 @@
 package com.mercadolivro.core.use_cases
 
+import com.mercadolivro.core.entities.Book
 import com.mercadolivro.core.entities.BookStatus
+import com.mercadolivro.core.entities.Customer
+import com.mercadolivro.core.entities.Purchase
 import com.mercadolivro.core.use_cases.exceptions.Errors
 import com.mercadolivro.core.use_cases.ports.AsynchronousCoordinator
 import com.mercadolivro.core.use_cases.ports.BookRepository
@@ -25,7 +28,19 @@ class Purchase(
         val nfe: String? = null,
         val price: BigDecimal,
         val createdAt: LocalDateTime
-    )
+    ) {
+        companion object {
+            fun fromEntities(p: Purchase, c: Customer, bs: List<Book>): Output {
+                return Output(
+                    id = p.id,
+                    customer = GetCustomerDetails.Output.fromCustomerEntity(c),
+                    books = bs.map { GetBookDetails.Output.fromBookEntity(it) },
+                    price = p.price,
+                    createdAt = p.createdAt
+                )
+            }
+        }
+    }
 
     fun purchase(input: Input): Output {
         val books = bookRepository.getAllByIds(input.bookIds)
@@ -57,12 +72,6 @@ class Purchase(
             }
         }
 
-        return Output(
-            id = purchase.id,
-            customer = GetCustomerDetails.Output.fromCustomerEntity(customer),
-            books = books.map { GetBookDetails.Output.fromBookEntity(it) },
-            price = purchase.price,
-            createdAt = purchase.createdAt
-        )
+        return Output.fromEntities(purchase, customer, books)
     }
 }

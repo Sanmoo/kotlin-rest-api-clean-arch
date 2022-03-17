@@ -27,9 +27,9 @@ class CustomerController(
     ): PaginatedResponse<CustomerDTO> {
         val paginationData = pageable.toPaginationData()
         val list = listCustomers.list(ListCustomers.Input(name, paginationData = paginationData)).list
-        return list.copyToAnotherType(list.content.map {
+        return list.copyToAnotherType {
             CustomerDTO(id = it.id, name = it.name, email = it.email, status = it.status, password = null)
-        }).toPaginatedResponse()
+        }.toPaginatedResponse()
     }
 
     @GetMapping("{id}")
@@ -48,7 +48,16 @@ class CustomerController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @UserCanOnlyAccessTheirOwnResource
     fun update(@PathVariable id: Int, @Valid @RequestBody c: UpdateCustomerRequest) {
-        updateCustomer.update(UpdateCustomer.Input(id = id, name = c.name, email = c.email, status = c.status, password = c.password))
+        updateCustomer.update(
+            UpdateCustomer.Input(
+                id = id,
+                name = c.name,
+                email = c.email,
+                status = c.status,
+                password = c.password,
+                roles = null
+            )
+        )
     }
 
     @DeleteMapping("{id}")

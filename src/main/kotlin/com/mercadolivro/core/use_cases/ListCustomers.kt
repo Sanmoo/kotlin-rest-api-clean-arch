@@ -15,8 +15,6 @@ class ListCustomers(private val customerRepository: CustomerRepository) {
             customerRepository.getAllByName(i.name, paginationData = i.paginationData)
         }
 
-        return Output(all.copyToAnotherType(all.content.map {
-            CreateCustomer.Output(id = it.id, name = it.name, email = it.email, status = it.status)
-        }))
+        return Output(all.copyToAnotherType(CreateCustomer.Output::fromCustomer))
     }
 }

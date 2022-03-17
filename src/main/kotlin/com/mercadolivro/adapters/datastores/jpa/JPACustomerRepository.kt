@@ -15,13 +15,27 @@ class JPACustomerRepository(
     private val customerRecordRepository: CustomerRecordRepository
 ) : JPAGenericRepository<Customer, CustomerRecord>(customerRecordRepository, CustomerRecord),
     CustomerRepository {
-    override fun create(name: String, status: CustomerStatus, email: String, password: String, roles: Set<Role>): Customer {
-        return customerRecordRepository.save(CustomerRecord(name = name, email = email, status = status, password = password, roles = roles)).toEntity()
+    override fun create(
+        name: String,
+        status: CustomerStatus,
+        email: String,
+        password: String,
+        roles: Set<Role>
+    ): Customer {
+        return customerRecordRepository.save(
+            CustomerRecord(
+                name = name,
+                email = email,
+                status = status,
+                password = password,
+                roles = roles
+            )
+        ).toEntity()
     }
 
     override fun getAllByName(name: String, paginationData: PaginationData): PaginatedResult<Customer> {
         val findAllByName = customerRecordRepository.findAllByName(name, paginationData.toPageable())
-        return findAllByName.toPaginatedResult().copyToAnotherType(findAllByName.content.map { it.toEntity() })
+        return findAllByName.toPaginatedResult().copyToAnotherType { it.toEntity() }
     }
 
     override fun existsByEmail(email: String): Boolean {
@@ -29,6 +43,6 @@ class JPACustomerRepository(
     }
 
     override fun getByEmail(email: String): Customer? {
-        return customerRecordRepository.findByEmail(email).map{ it.toEntity() }.orElse(null)
+        return customerRecordRepository.findByEmail(email).map { it.toEntity() }.orElse(null)
     }
 }

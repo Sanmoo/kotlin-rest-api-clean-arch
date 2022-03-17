@@ -33,12 +33,12 @@ class JPABookRepository(
 
     override fun getAllByName(name: String, paginationData: PaginationData): PaginatedResult<Book> {
         val findAllByName = bookRecordRepository.findAllByName(name, paginationData.toPageable())
-        return findAllByName.toPaginatedResult().copyToAnotherType(findAllByName.content.map { it.toEntity() })
+        return findAllByName.toPaginatedResult().copyToAnotherType { it.toEntity() }
     }
 
     override fun getAllByStatus(status: BookStatus, paginationData: PaginationData): PaginatedResult<Book> {
         val findAllByStatus = bookRecordRepository.findAllByStatus(status, paginationData.toPageable())
-        return findAllByStatus.toPaginatedResult().copyToAnotherType(findAllByStatus.content.map { it.toEntity() })
+        return findAllByStatus.toPaginatedResult().copyToAnotherType { it.toEntity() }
     }
 
     override fun getAllByNameAndStatus(
@@ -49,7 +49,7 @@ class JPABookRepository(
         val findAllByNameAndStatus =
             bookRecordRepository.findAllByNameAndStatus(name, status, paginationData.toPageable())
         return findAllByNameAndStatus.toPaginatedResult()
-            .copyToAnotherType(findAllByNameAndStatus.content.map { it.toEntity() })
+            .copyToAnotherType { it.toEntity() }
     }
 
     override fun findByCustomer(customer: Customer, paginationData: PaginationData): PaginatedResult<Book> {
@@ -57,7 +57,7 @@ class JPABookRepository(
             CustomerRecord.fromEntity(customer),
             paginationData.toPageable()
         )
-        return findByCustomer.toPaginatedResult().copyToAnotherType(findByCustomer.content.map { it.toEntity() })
+        return findByCustomer.toPaginatedResult().copyToAnotherType { it.toEntity() }
     }
 
     override fun updateAll(books: List<Book>) {

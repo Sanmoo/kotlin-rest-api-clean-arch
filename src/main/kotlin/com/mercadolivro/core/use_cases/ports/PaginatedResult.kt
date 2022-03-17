@@ -7,9 +7,9 @@ data class PaginatedResult<T>(
     val totalPages: Int,
     val totalRecords: Long
 ) {
-    fun <R> copyToAnotherType(content: List<R>): PaginatedResult<R> {
+    fun <R> copyToAnotherType(mapContent: (i: T) -> R): PaginatedResult<R> {
         return PaginatedResult(
-            content = content,
+            content = this.content.map { mapContent(it) },
             pageSize = pageSize,
             pageNumber = pageNumber,
             totalPages = totalPages,
@@ -17,3 +17,4 @@ data class PaginatedResult<T>(
         )
     }
 }
+

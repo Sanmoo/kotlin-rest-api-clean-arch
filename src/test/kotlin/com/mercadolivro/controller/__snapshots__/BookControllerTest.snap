@@ -1,0 +1,28 @@
+com.mercadolivro.controller.BookControllerTest.creates a book with an associated customer=[
+{"id":1,"name":"Testing Name","price":50.05,"status":"ACTIVE","customerId":1}
+]
+
+
+com.mercadolivro.controller.BookControllerTest.creates a book without an associated customer=[
+{"id":1,"name":"Testing Name","price":50.05,"status":"ACTIVE"}
+]
+
+
+com.mercadolivro.controller.BookControllerTest.gets a book=[
+{"id":1,"name":"Testing Name","price":50.05,"status":"ACTIVE","customerId":1}
+]
+
+
+com.mercadolivro.controller.BookControllerTest.lists all active books=[
+{"content":[{"id":1,"name":"Testing Name","price":50.05,"status":"ACTIVE","customerId":1},{"id":2,"name":"Testing Name","price":50.05,"status":"ACTIVE"}],"pageSize":10,"pageNumber":0,"totalPages":1,"totalRecords":2}
+]
+
+
+com.mercadolivro.controller.BookControllerTest.lists all books for a given name=[
+{"content":[{"id":2,"name":"Testing Name","price":50.05,"status":"ACTIVE"}],"pageSize":10,"pageNumber":0,"totalPages":1,"totalRecords":1}
+]
+
+
+com.mercadolivro.controller.BookControllerTest.lists all books=[
+{"content":[{"id":1,"name":"Testing Name","price":50.05,"status":"ACTIVE","customerId":1},{"id":2,"name":"Testing Name","price":50.05,"status":"ACTIVE"}],"pageSize":10,"pageNumber":0,"totalPages":1,"totalRecords":2}
+]

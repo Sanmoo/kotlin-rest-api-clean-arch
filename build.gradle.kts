@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("org.springframework.boot") version "2.6.3"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
+	id("jacoco")
 	kotlin("jvm") version "1.6.10"
 	kotlin("plugin.spring") version "1.6.10"
 }
@@ -30,6 +31,11 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt:0.2")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("io.mockk:mockk:1.12.2")
+	testImplementation("org.springframework.security:spring-security-test:5.6.2")
+	testImplementation("com.ninja-squad:springmockk:3.1.1")
+	testImplementation("io.github.origin-energy:java-snapshot-testing-junit5:3.2.+")
+	testImplementation("com.h2database:h2:1.4.194")
 }
 
 tasks.withType<KotlinCompile> {
@@ -41,4 +47,39 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.test {
+	finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+	dependsOn(tasks.test)
+	classDirectories.setFrom(files(classDirectories.files.map {
+		fileTree(it) {
+			exclude("**/configuration/*")
+		}
+	}))
+}
+
+tasks.jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = "0.5".toBigDecimal()
+			}
+		}
+
+		rule {
+			isEnabled = false
+			element = "CLASS"
+			includes = listOf("org.gradle.*")
+
+			limit {
+				counter = "LINE"
+				value = "TOTALCOUNT"
+				maximum = "0.3".toBigDecimal()
+			}
+		}
+	}
 }

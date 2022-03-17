@@ -1,0 +1,24 @@
+com.mercadolivro.controller.CustomerControllerTest.creates a user if request is valid=[
+{"id":1,"name":"Testing Name","email":"testing-email1@test.com","status":"ACTIVE"}
+]
+
+
+com.mercadolivro.controller.CustomerControllerTest.gets customer details when authorized=[
+{"id":1,"name":"Testing Name","email":"testing-email1@test.com","status":"ACTIVE"}
+]
+
+
+com.mercadolivro.controller.CustomerControllerTest.gets customer details when user is admin=[
+{"id":2,"name":"Testing Name","email":"testing-email2@test.com","status":"ACTIVE"}
+]
+
+
+com.mercadolivro.controller.CustomerControllerTest.returns all customers with a given name=[
+{"content":[{"id":1,"name":"Testing Name","email":"testing-email1@test.com","status":"ACTIVE"},{"id":2,"name":"Testing Name","email":"testing-email2@test.com","status":"ACTIVE"}],"pageSize":10,"pageNumber":0,"totalPages":1,"totalRecords":2}
+]
+
+
+com.mercadolivro.controller.CustomerControllerTest.returns all customers=[
+{"content":[{"id":1,"name":"Testing Name","email":"testing-email1@test.com","status":"ACTIVE"},{"id":2,"name":"Testing Name","email":"testing-email2@test.com","status":"ACTIVE"}],"pageSize":10,"pageNumber":0,"totalPages":1,"totalRecords":2}
+]
+
